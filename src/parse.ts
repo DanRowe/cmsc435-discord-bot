@@ -20,9 +20,9 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
     const { children } = td
     const markdown = turndownService.turndown(td)
     // Extract data and shit
-    const [firstParagraph] = Array.from(children)
+    const [ firstParagraph ] = Array.from(children)
     // [ strong tag with date string, a tag with id ]
-    const [date, idATag] = Array.from(firstParagraph.children)
+    const [ date, idATag ] = Array.from(firstParagraph.children)
     const { id } = idATag
     const now = new Date()
     const postTime = new Date(date.innerHTML)
@@ -40,12 +40,12 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
         timestamp = now.toISOString()
     } else {
         // Convert to EST
-        timestamp = postTime.toISOString();
+        timestamp = postTime.toISOString()
         timestamp = timestamp.substr(0, timestamp.length - 1) // remove the Z
         timestamp += '-05:00'
     }
 
-    const buildBaseEmbeds = ({ title, description = "", timestamp }: Embed, count = 1): Embed[] => {
+    const buildBaseEmbeds = ({ title, description = '', timestamp }: Embed, count = 1): Embed[] => {
         const needsAnotherPart = description.length >= MAX_LEN
         let splitAt = -1
         let cleanedDescription = ''
@@ -69,13 +69,13 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
             ? []
             : [
                 {
-                    "name": "Blog Post",
-                    "value": `https://seam.cs.umd.edu/purtilo/435/blog.html#${id}`
+                    'name':  'Blog Post',
+                    'value': `https://seam.cs.umd.edu/purtilo/435/blog.html#${id}`
                 }
             ]
 
         return [{
-            title: count === 1 ? title : undefined,
+            title:       count === 1 ? title : undefined,
             description: cleanedDescription,
             timestamp,
             footer,
@@ -90,14 +90,14 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
                     timestamp
                 }, count + 1)
                 : []
-        )]
+        ) ]
     }
 
 
     // return buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
     return {
-        embeds: buildBaseEmbeds({ title: id, description: markdown, timestamp }),
-        avatar_url: "https://www.csee.umbc.edu/wp-content/uploads/2012/07/Purtilo1.jpg",
-        username: "CMSC 435 Bot"
+        embeds:     buildBaseEmbeds({ title: id, description: markdown, timestamp }),
+        avatar_url: 'https://www.csee.umbc.edu/wp-content/uploads/2012/07/Purtilo1.jpg',
+        username:   'CMSC 435 Bot'
     }
 }
