@@ -4,35 +4,14 @@ name: Build and Lint
 on: push
 
 jobs:
-  # Run a basic lint on the entire codebase
-  lint:
-    # Name the Job
-    name: Lint code base
-    # Set the type of machine to run on
-    runs-on: ubuntu-latest
 
-    steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
-      # Note: Entire git history is needed for super-linter to work correctly
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Runs the Super-Linter action
-      - name: Run Super-Linter
-        uses: github/super-linter@v3
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          LINTER_RULES_PATH: /
-          TYPESCRIPT_ES_CONFIG_FILE: .eslintrc.js
-          JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.js
-
-  # Build the codebase, making the compiled code available as an artifact
+  # Build/lint the codebase, making the compiled code available as an artifact
   # TODO: add testing
-  build:
-    name: Build code base
+  build_and_lint:
+    name: Build and Lint
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
 
     steps:
       - name: Checkout
@@ -43,6 +22,10 @@ jobs:
       # Install dependencies
       - name: Install
         run: yarn install --frozen-lockfile
+
+      # Lint source code
+      - name: Lint
+        run: yarn lint
 
       # Compile the source code
       - name: Build
