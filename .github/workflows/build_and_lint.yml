@@ -10,8 +10,9 @@ jobs:
   build_and_lint:
     name: Build and Lint
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
+    # TODO set node_env to production but also force yarn to install dev dependencies
+    # env:
+    #   NODE_ENV: production
 
     steps:
       - name: Checkout
