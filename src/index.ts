@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
-import cron from 'node-cron'
 import { parseTableData } from './parse'
 import Bluebird from 'bluebird'
 // @ts-ignore
@@ -46,6 +45,4 @@ const main = async () => {
 
 }
 
-cron.schedule("0 * * * *", () => {
-    main()
-})
+main();
