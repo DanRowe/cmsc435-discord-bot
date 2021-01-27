@@ -17,7 +17,7 @@ const cutAtWord = (str: string, len: number = MAX_LEN) => {
     return str.substr(0, index)
 }
 
-export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteWebhookBody[]> => {
+export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteWebhookBody> => {
 
     const { children } = td
 
@@ -87,7 +87,7 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
 
 
     // return buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
-    return [{
+    return {
         embeds: buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
-    }]
+    }
 }

@@ -3,6 +3,7 @@ import { JSDOM } from 'jsdom'
 import cron from 'node-cron'
 import { parseTableData } from './parse'
 import Bluebird from 'bluebird'
+import { ExecuteWebhookBody } from './types/interface'
 // @ts-ignore
 global.Promise = Bluebird.Promise
 
@@ -19,31 +20,25 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
     return rest || []
 }
 
+const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
+    for (let post of data) {
+        await axios.post(webhook, post).catch(err => {
+            if (err.response) {
+                console.error(err.response)
+                console.error("==========================")
+                console.error(JSON.stringify(post, undefined, 2))
+            } else if (err.message) {
+                console.error(err.message)
+            } else {
+                console.error(err)
+            }
+        })
+    }
+}
 
 const main = async () => {
-    // const data = await Promise.all((await getTableElements()).map(parseTableData).reverse())
     const data = await getTableElements().map(parseTableData)
-    // let res = await parseTableData(data[0])
-    for (let post of data) {
-        for (let part of post) {
-            await axios.post(webhook, part).catch(err => {
-                if (err.response) {
-                    console.error(err.response)
-                    console.error("==========================")
-                    console.error(JSON.stringify(post, undefined, 2))
-                } else if (err.message) {
-                    console.error(err.message)
-                } else {
-                    console.error(err)
-                }
-            })
-        }
-    }
-    // console.log(await parseTableData(data[0]))
-    // let { message, metadata } = await compileAST(data[0])
-    // console.log(message)
-    // data.forEach((el => console.log(JSON.stringify(el, undefined, 2))))
-
+    await sendDiscordNotifications(data)
 }
 
 cron.schedule("0 * * * *", () => {
