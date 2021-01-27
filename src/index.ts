@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
-import cron from 'node-cron'
 import { parseTableData } from './parse'
 import Bluebird from 'bluebird'
 import { ExecuteWebhookBody } from './types/interface'
@@ -41,6 +40,4 @@ const main = async () => {
     await sendDiscordNotifications(data)
 }
 
-cron.schedule("0 * * * *", () => {
-    main()
-})
+main();
