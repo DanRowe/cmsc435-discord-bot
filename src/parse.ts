@@ -26,6 +26,7 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
     // [ strong tag with date string, a tag with id ]
     const [date, idATag] = Array.from(firstParagraph.children)
     const markdown = turndownService.turndown(td)
+    const { id } = idATag
     const now = new Date()
     const postTime = new Date(date.innerHTML)
 
@@ -57,6 +58,7 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
             ? undefined
             : { text: `Part ${count}` }
 
+        //
         // split and clean the description as needed
         if (needsAnotherPart) {
             cleanedDescription = cutAtWord(description)
@@ -66,12 +68,21 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
         }
 
         cleanedDescription = cleanedDescription.trim()
+        const fields = needsAnotherPart
+            ? []
+            : [
+                {
+                    "name": "Blog Post",
+                    "value": `https://seam.cs.umd.edu/purtilo/435/blog.html#${id}`
+                }
+            ]
 
         return [{
             title: count === 1 ? title : undefined,
             description: cleanedDescription,
             timestamp,
-            footer
+            footer,
+            fields
         },
         ...(
             // Call recursively if we need to split again, otherwise we're done
@@ -82,12 +93,13 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
                     timestamp
                 }, count + 1)
                 : []
-        ) ]
+        )]
     }
 
 
     // return buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
     return {
-        embeds: buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
+        content: "Yung James has posted another blog post",
+        embeds: buildBaseEmbeds({ title: id, description: markdown, timestamp }),
     }
 }

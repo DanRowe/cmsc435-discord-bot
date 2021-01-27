@@ -37,7 +37,7 @@ const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
 
 const main = async () => {
     const data = await getTableElements().map(parseTableData)
-    await sendDiscordNotifications(data)
+    await sendDiscordNotifications(data.reverse())
 }
 
 main();
