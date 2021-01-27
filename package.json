@@ -1,10 +1,13 @@
 {
-  "name": "cmsc435-disc-hooks",
+  "name": "CMSC435-discord-bot",
   "version": "1.0.0",
   "main": "disc/index.js",
-  "repository": "https://github.com/DonIsaac/cmsc435-discord-webhooks.git",
-  "author": "Donald Isaac",
-  "license": "GNU GPLv3",
+  "repository": "https://github.com/DanRowe/CMSC435-discord-bot.git",
+  "contributors": [
+    "Donald Isaac",
+    "Daniel Rowe <daniel@drowe.dev> (https://github.com/DanRowe)"
+  ],
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "tsc",
