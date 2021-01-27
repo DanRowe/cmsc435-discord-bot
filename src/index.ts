@@ -33,16 +33,12 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
 
   result.forEach((e) => {
     fs.appendFile(
-      
       "src/blogsToday",
-
-           `${e.children[0].children[1].id}\n`,
-     
+      `${e.children[0].children[1].id}\n`,
       (err) => {
         if (err) console.error(err);
         console.log(`Saved ${e.children[0].children[1].id}!`);
       }
-    
     );
   });
 
