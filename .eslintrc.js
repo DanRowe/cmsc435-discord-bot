@@ -22,10 +22,12 @@ module.exports = {
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
     ],
     rules: {
+        "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "error",
         "@typescript-eslint/prefer-regexp-exec": "off",
         "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-unsafe-member-access": "warn",
         "@typescript-eslint/no-empty-interface": "warn",
         "array-bracket-spacing": ["error", "always", {
             "objectsInArrays": false,

@@ -16,7 +16,7 @@ const blogs = fs.readFileSync(blogFile, 'utf8').split('\n')
 
 const today = new Date()
 const todaysDate =
-  today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+  `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
 const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
     const res = await axios.get<string>(blogUrl)
@@ -28,7 +28,7 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
     )
 
     const result = rest.filter(
-        (e) =>
+        e =>
             e.children[0].children[0].innerHTML.localeCompare(todaysDate) == 0 &&
       !blogs.includes(e.children[0].children[1].id)
     )
@@ -50,7 +50,7 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
 const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
     for (const post of data) {
         await axios.post(webhookUrl, post).catch(err => {
-            if (err.response) {
+            if (err?.response) {
                 console.error(err.response)
                 console.error('==========================')
                 console.error(JSON.stringify(post, undefined, 2))
@@ -63,9 +63,9 @@ const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
     }
 }
 
-const main = async () => {
+const main = async (): Promise<void> => {
     const data = await getTableElements().map(parseTableData)
     await sendDiscordNotifications(data.reverse())
 }
 
-main()
+void main()

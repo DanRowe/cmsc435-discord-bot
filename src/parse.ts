@@ -1,11 +1,12 @@
 import TurndownService from 'turndown'
+import config from './config'
 import { Embed } from './types/embed'
 import { ExecuteWebhookBody } from './types/interface'
 
+const { blogUrl, avatarUrl, username, maxDescLen } = config
 const turndownService = new TurndownService()
-const MAX_LEN = 2000
 
-const cutAtWord = (str: string, len: number = MAX_LEN) => {
+const cutAtWord = (str: string, len: number = maxDescLen) => {
     let index = len - 1
 
     while (/\s/.test(str.charAt(index))) {
@@ -15,7 +16,7 @@ const cutAtWord = (str: string, len: number = MAX_LEN) => {
     return str.substr(0, index)
 }
 
-export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteWebhookBody> => {
+export const parseTableData = (td: HTMLTableCellElement): ExecuteWebhookBody => {
 
     const { children } = td
     const markdown = turndownService.turndown(td)
@@ -45,8 +46,16 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
         timestamp += '-05:00'
     }
 
+    /**
+     * Creates a list of Embeds to add to the message. If the blog post is over
+     * discord's maximum description length (`2000`), then more than one embed
+     * is needed. This function splits said description appropriately. It also
+     * adds the part number in the footer if a split occurs.
+     * @param data
+     * @param count
+     */
     const buildBaseEmbeds = ({ title, description = '', timestamp }: Embed, count = 1): Embed[] => {
-        const needsAnotherPart = description.length >= MAX_LEN
+        const needsAnotherPart = description.length >= maxDescLen
         let splitAt = -1
         let cleanedDescription = ''
 
@@ -70,7 +79,7 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
             : [
                 {
                     'name':  'Blog Post',
-                    'value': `https://seam.cs.umd.edu/purtilo/435/blog.html#${id}`
+                    'value': `${blogUrl}#${id}`
                 }
             ]
 
@@ -97,7 +106,7 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
     // return buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
     return {
         embeds:     buildBaseEmbeds({ title: id, description: markdown, timestamp }),
-        avatar_url: 'https://www.csee.umbc.edu/wp-content/uploads/2012/07/Purtilo1.jpg',
-        username:   'CMSC 435 Bot'
+        avatar_url: avatarUrl,
+        username
     }
 }
