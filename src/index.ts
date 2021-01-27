@@ -3,6 +3,7 @@ import { JSDOM } from 'jsdom'
 import TurndownService from 'turndown'
 import assert from 'assert'
 import { ExecuteWebhookBody } from './types/interface'
+import cron from 'node-cron'
 import { parseTableData } from './parse'
 
 const blog = 'https://seam.cs.umd.edu/purtilo/435/blog.html'
@@ -51,4 +52,6 @@ const main = async () => {
 
 }
 
-main()
+cron.schedule("0 * * * *", () => {
+    main()
+})
