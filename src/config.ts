@@ -32,7 +32,15 @@ const config = {
     /**
      * Display name of the bot in Discord.
      */
-    username: 'CMSC 435 Bot'
+    username: 'CMSC 435 Bot',
+
+    /**
+     * Maximum number of characters allowed in a Discord Embed's `description`
+     * field, which is where we put blog posts for rich formatting.
+     *
+     * @see {@link src/types/embed.ts Embed}
+     */
+    maxDescLen: 2000
 }
 
 export default config
