@@ -1,14 +1,16 @@
 import axios from 'axios'
-import { JSDOM } from 'jsdom'
-import { parseTableData } from './parse'
-import Bluebird from 'bluebird'
-import { ExecuteWebhookBody } from './types/interface'
+import Bluebird from "bluebird";
+import { JSDOM } from "jsdom";
 import fs from "fs";
+import dotenv from "dotenv";
+import { parseTableData } from "./parse";
+import { ExecuteWebhookBody } from "./types/interface";
 // @ts-ignore
 global.Promise = Bluebird.Promise
+dotenv.config();
 
 const blogUrl = 'https://seam.cs.umd.edu/purtilo/435/blog.html'
-const webhookUrl = 'https://discord.com/api/webhooks/803841404576333825/9MQnRPAfxMdqsx3KxNsUy3G0juVZn1FLB1kHy_SyNGQYP8h_go-o8Hs1fmSrszCnkcP0'
+const webhookUrl = process.env.WEBHOOK_URL || "";
 
 const blogs = fs.readFileSync("src/blogsToday", "utf8").split("\n");
 
