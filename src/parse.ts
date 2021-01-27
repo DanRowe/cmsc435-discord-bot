@@ -99,7 +99,8 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
 
     // return buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
     return {
-        content: "Yung James has posted another blog post",
         embeds: buildBaseEmbeds({ title: id, description: markdown, timestamp }),
+        avatar_url: "https://www.csee.umbc.edu/wp-content/uploads/2012/07/Purtilo1.jpg",
+        username: "CMSC 435 Bot"
     }
 }
