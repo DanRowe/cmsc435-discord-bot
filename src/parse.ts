@@ -1,5 +1,3 @@
-import axios from 'axios'
-import { JSDOM } from 'jsdom'
 import TurndownService from 'turndown'
 import { Embed } from './types/embed'
 import { ExecuteWebhookBody } from './types/interface'
@@ -20,12 +18,11 @@ const cutAtWord = (str: string, len: number = MAX_LEN) => {
 export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteWebhookBody> => {
 
     const { children } = td
-
+    const markdown = turndownService.turndown(td)
     // Extract data and shit
     const [firstParagraph] = Array.from(children)
     // [ strong tag with date string, a tag with id ]
     const [date, idATag] = Array.from(firstParagraph.children)
-    const markdown = turndownService.turndown(td)
     const { id } = idATag
     const now = new Date()
     const postTime = new Date(date.innerHTML)
