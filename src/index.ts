@@ -7,8 +7,8 @@ import fs from "fs";
 // @ts-ignore
 global.Promise = Bluebird.Promise
 
-const blog = 'https://seam.cs.umd.edu/purtilo/435/blog.html'
-const webhook = 'https://discord.com/api/webhooks/803841404576333825/9MQnRPAfxMdqsx3KxNsUy3G0juVZn1FLB1kHy_SyNGQYP8h_go-o8Hs1fmSrszCnkcP0'
+const blogUrl = 'https://seam.cs.umd.edu/purtilo/435/blog.html'
+const webhookUrl = 'https://discord.com/api/webhooks/803841404576333825/9MQnRPAfxMdqsx3KxNsUy3G0juVZn1FLB1kHy_SyNGQYP8h_go-o8Hs1fmSrszCnkcP0'
 
 const blogs = fs.readFileSync("src/blogsToday", "utf8").split("\n");
 
@@ -17,7 +17,7 @@ const todaysDate =
   today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
 const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
-  const res = await axios.get<string>(blog);
+  const res = await axios.get<string>(blogUrl);
   const dom = new JSDOM(res.data);
   const { document } = dom.window;
   // First is a page header and can be discarded
@@ -51,7 +51,7 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
 
 const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
     for (let post of data) {
-        await axios.post(webhook, post).catch(err => {
+        await axios.post(webhookUrl, post).catch(err => {
             if (err.response) {
                 console.error(err.response)
                 console.error("==========================")
