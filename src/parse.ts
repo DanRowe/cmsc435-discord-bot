@@ -1,11 +1,23 @@
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
 import TurndownService from 'turndown'
+import { Embed } from './types/embed'
 import { ExecuteWebhookBody } from './types/interface'
 
 const turndownService = new TurndownService()
+const MAX_LEN = 2000
 
-export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteWebhookBody> => {
+const cutAtWord = (str: string, len: number = MAX_LEN) => {
+    let index = len - 1
+
+    while (/\s/.test(str.charAt(index))) {
+        index--
+    }
+
+    return str.substr(0, index)
+}
+
+export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteWebhookBody[]> => {
 
     const { children } = td
 
@@ -35,14 +47,47 @@ export const parseTableData = async (td: HTMLTableCellElement): Promise<ExecuteW
         timestamp += '-05:00'
     }
 
+    const buildBaseEmbeds = ({ title, description = "", timestamp }: Embed, count = 1): Embed[] => {
+        const needsAnotherPart = description.length >= MAX_LEN
+        let splitAt = -1
+        let cleanedDescription = ''
 
-    return {
-        embeds: [
-            {
-                title: idATag.id,
-                description: markdown,
-                timestamp
-            },
-        ]
+        // If the embed doesn't need to be split, don't include 'Part 1' in the footer.
+        const footer = !needsAnotherPart && count === 1
+            ? undefined
+            : { text: `Part ${count}` }
+
+        // split and clean the description as needed
+        if (needsAnotherPart) {
+            cleanedDescription = cutAtWord(description)
+            splitAt = cleanedDescription.length
+        } else {
+            cleanedDescription = description
+        }
+
+        cleanedDescription = cleanedDescription.trim()
+
+        return [{
+            title: count === 1 ? title : undefined,
+            description: cleanedDescription,
+            timestamp,
+            footer
+        },
+        ...(
+            // Call recursively if we need to split again, otherwise we're done
+            needsAnotherPart
+                ? buildBaseEmbeds({
+                    title,
+                    description: description.substr(splitAt),
+                    timestamp
+                }, count + 1)
+                : []
+        ) ]
     }
+
+
+    // return buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
+    return [{
+        embeds: buildBaseEmbeds({ title: idATag.id, description: markdown, timestamp })
+    }]
 }
