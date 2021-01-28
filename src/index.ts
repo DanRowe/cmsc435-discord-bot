@@ -1,7 +1,8 @@
 import axios from 'axios'
 import Bluebird from 'bluebird'
 import { JSDOM } from 'jsdom'
-import fs from 'fs'
+import { promises as fs } from 'fs'
+
 import config from './config'
 import { parseTableData } from './parse'
 import { ExecuteWebhookBody } from './types/interface'
@@ -12,52 +13,63 @@ const { blogUrl, webhookUrl, blogFile } = config
 // const blogUrl = 'https://seam.cs.umd.edu/purtilo/435/blog.html'
 // const webhookUrl = process.env.WEBHOOK_URL || ''
 
-const blogs = fs.readFileSync(blogFile, 'utf8').split('\n')
+// const blogs = fs.readFileSync(blogFile, 'utf8').split('\n')
 
+const loadBlogFile = async (): Promise<string[]> => {
+    try {
+        const s = await fs.stat(blogFile)
+        // if (s.isDirectory()) throw new Error('Blog file is a directory')
+        return (await fs.readFile(blogFile, 'utf8')).split('\n')
+    } catch (e) {
+        return []
+    }
+}
+
+const blogs = loadBlogFile()
 const today = new Date()
 const todaysDate =
-  `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+    `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
-const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
-    const res = await axios.get<string>(blogUrl)
+/**
+ * Fetches a webpage and pulls out the table data
+ *
+ * @param url URL of the page to scrape
+ */
+const getTableElements = async (url = blogUrl): Promise<HTMLTableCellElement[]> => {
+    const res = await axios.get<string>(url)
     const dom = new JSDOM(res.data)
     const { document } = dom.window
     // First is a page header and can be discarded
-    const [ first, ...rest ] = document.querySelectorAll<HTMLTableCellElement>(
+    const [ _, ...content ] = document.querySelectorAll<HTMLTableCellElement>(
         'table td'
     )
 
-    const newPosts = getNewPosts(rest)
+    const newPosts = await getNewPosts(content)
 
-    updateBlogsToday(newPosts)
+    await updateBlogFile(newPosts)
 
     return newPosts
 }
 
-const getNewPosts = (posts: HTMLTableCellElement[]): HTMLTableCellElement[] => {
+const getNewPosts = async (posts: HTMLTableCellElement[]): Promise<HTMLTableCellElement[]> => {
+    const b = await blogs
     return posts.filter(e => {
         const date = e.children[0].children[0].innerHTML
         const id = e.children[0].children[1].id
 
         const isToday = date.localeCompare(todaysDate) === 0
-        const isNew = !blogs.includes(id)
+        const isNew = !b.includes(id)
 
         return isToday && isNew
     })
 }
 
-const updateBlogsToday = (posts: HTMLTableCellElement[]) => {
-    posts.forEach((e) => {
-        fs.appendFile(
-            blogFile,
-            `${e.children[0].children[1].id}\n`,
-            (err) => {
-                if (err) console.error(err)
-                console.log(`Saved ${e.children[0].children[1].id}!`)
-            }
-        )
-    })
-}
+const updateBlogFile = (posts: HTMLTableCellElement[]) => Promise.all(
+    posts.map(e => fs.appendFile(
+        blogFile,
+        `${e.children[0].children[1].id}\n`
+    )))
+
 
 const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
     for (const post of data) {
