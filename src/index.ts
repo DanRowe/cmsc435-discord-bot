@@ -29,7 +29,7 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
 
     const newPosts = getNewPosts(rest)
 
-    updateBlogsToday(newPosts)
+    updateBlogFile(newPosts)
 
     return newPosts
 }
@@ -46,7 +46,7 @@ const getNewPosts = (posts: HTMLTableCellElement[]): HTMLTableCellElement[] => {
     })
 }
 
-const updateBlogsToday = (posts: HTMLTableCellElement[]) => {
+const updateBlogFile = (posts: HTMLTableCellElement[]) => {
     posts.forEach((e) => {
         const postId = e.children[0].children[1].id
         fs.appendFile(
@@ -78,7 +78,7 @@ const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
 
 const main = async (): Promise<void> => {
     const data = await getTableElements().map(parseTableData)
-    await sendDiscordNotifications(data.reverse())
+    // await sendDiscordNotifications(data.reverse())
 }
 
 void main()
