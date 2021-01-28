@@ -27,13 +27,27 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
         'table td'
     )
 
-    const result = rest.filter(
-        e =>
-            e.children[0].children[0].innerHTML.localeCompare(todaysDate) == 0 &&
-      !blogs.includes(e.children[0].children[1].id)
-    )
+    const newPosts = getNewPosts(rest)
 
-    result.forEach((e) => {
+    updateBlogsToday(newPosts)
+
+    return newPosts
+}
+
+const getNewPosts = (posts: HTMLTableCellElement[]): HTMLTableCellElement[] => {
+    return posts.filter(e => {
+        const date = e.children[0].children[0].innerHTML
+        const id = e.children[0].children[1].id
+
+        const isToday = date.localeCompare(todaysDate) === 0
+        const isNew = !blogs.includes(id)
+
+        return isToday && isNew
+    })
+}
+
+const updateBlogsToday = (posts: HTMLTableCellElement[]) => {
+    posts.forEach((e) => {
         fs.appendFile(
             blogFile,
             `${e.children[0].children[1].id}\n`,
@@ -43,8 +57,6 @@ const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
             }
         )
     })
-
-    return result
 }
 
 const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
