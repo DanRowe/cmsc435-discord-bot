@@ -48,12 +48,13 @@ const getNewPosts = (posts: HTMLTableCellElement[]): HTMLTableCellElement[] => {
 
 const updateBlogsToday = (posts: HTMLTableCellElement[]) => {
     posts.forEach((e) => {
+        const postId = e.children[0].children[1].id
         fs.appendFile(
             blogFile,
-            `${e.children[0].children[1].id}\n`,
+            `${postId}\n`,
             (err) => {
                 if (err) console.error(err)
-                console.log(`Saved ${e.children[0].children[1].id}!`)
+                console.log(`Saved ${postId}!`)
             }
         )
     })
