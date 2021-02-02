@@ -70,7 +70,6 @@ const updateBlogFile = (posts: HTMLTableCellElement[]) => Promise.all(
         `${e.children[0].children[1].id}\n`
     )))
 
-
 const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
     for (const post of data) {
         await axios.post(webhookUrl, post).catch(err => {
