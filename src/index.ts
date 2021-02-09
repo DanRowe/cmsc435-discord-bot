@@ -15,7 +15,7 @@ const { blogUrl, webhookUrl, blogFile } = config
 const blogs = fs.readFileSync(blogFile, 'utf8').split('\n')
 
 const today = new Date()
-const formatNumber = (num: Number) => ("0" + num).slice(-2);
+const formatNumber = (num: number) => (`0${num}`).slice(-2)
 const todaysDate =
   `${today.getFullYear()}-${formatNumber(today.getMonth() + 1)}-${formatNumber(today.getDate())}`
 
