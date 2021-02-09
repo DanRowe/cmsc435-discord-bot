@@ -15,8 +15,9 @@ const { blogUrl, webhookUrl, blogFile } = config
 const blogs = fs.readFileSync(blogFile, 'utf8').split('\n')
 
 const today = new Date()
+const formatNumber = (num: Number) => ("0" + num).slice(-2);
 const todaysDate =
-  `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+  `${today.getFullYear()}-${formatNumber(today.getMonth() + 1)}-${formatNumber(today.getDate())}`
 
 const getTableElements = async (): Promise<HTMLTableCellElement[]> => {
     const res = await axios.get<string>(blogUrl)
