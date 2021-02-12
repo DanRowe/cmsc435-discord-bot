@@ -27,8 +27,9 @@ const loadBlogFile = async (): Promise<string[]> => {
 
 const blogs = loadBlogFile()
 const today = new Date()
+const formatNumber = (num: number) => (`0${num}`).slice(-2)
 const todaysDate =
-    `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+  `${today.getFullYear()}-${formatNumber(today.getMonth() + 1)}-${formatNumber(today.getDate())}`
 
 /**
  * Fetches a webpage and pulls out the table data
