@@ -44,7 +44,7 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
     env:
-      WEBHOOK_URL: https://discord.com/api/webhooks/800453941313745987/foo-bar-baz-bang
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
     steps:
       - name: Checkout
