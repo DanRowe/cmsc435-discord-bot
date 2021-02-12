@@ -4,6 +4,12 @@
 
 Notifies you when Dr. Purtilo makes a new [blog post](https://seam.cs.umd.edu/purtilo/435/blog.html) by sending a message to a discord text channel.
 
+<p align="center">
+
+![Example Message](doc/bot-example-msg.png)
+
+</p>
+
 ## Setup
 
 First, make sure you have Node installed. You should be using node `v10` or higher. However, because this project uses TypeScript, you can change the target ECMAScript version to suit your needs. Secondly, we're also using the [yarn](https://yarnpkg.com) package manager instead of `npm`. You'll need `v1.2.x` installed.
@@ -17,6 +23,18 @@ yarn --frozen-lockfile
 yarn build
 ```
 
+You'll also need to make a discord webhook url. Check [here](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+for how to create one. You then need to make it available to the bot through the
+`WEBHOOK_URL` environment variable. You can set this however you'd like, but we
+recommend creating a `.env` file in the folder root. Your file should look like
+this:
+
+```env
+WEBHOOK_URL=<your_discord_webhook_url>
+```
+
+## Running
+
 You can then run the program using `yarn start`. If you're deploying this on your VM, you're gonna want to set up a cron job. This will make the program check for updates periodically. To edit your cronjobs, run `crontab -e`. For root-level cronjobs, prefix this with `sudo`, but a user-level one will work fine for our purposes.
 
 Make your cronjob file look something like this:
@@ -28,7 +46,7 @@ MAILTO=root@example.com
 # Make sure node and yarn are available on the path. Adjust as necessary
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-*/15 * * * * (cd /path/to/your/cmsc435-discord-bot; 
+*/15 * * * * (cd /path/to/your/cmsc435-discord-bot;
 ```
 
 This makes the bot run every 15 minutes. For more info on how to configure this, see this [helpful article](https://opensource.com/article/17/11/how-use-cron-linux) or use `man crontab`.
