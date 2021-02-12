@@ -48,13 +48,26 @@ describe('cutAtWord()', () => {
     })
 
     describe('edge cases', () => {
-        it('Single space at split', () => {
-            const str = 'Hello, world! ' // the trailing space is important
-            const expected = 'Hello, world!'
+        const hw = 'Hello, world!  ' // the trailing space is important
+        const ex1 = 'some big fancy sentence'
 
-            expect(cutAtWord(str, str.length)).toBe(expected)
-            expect(cutAtWord(str, str.length - 1)).toBe(expected)
-        })
+        it.each([
+
+            [ hw, hw.length, hw ],                // Not shorter than constraint; not modified
+            [ hw, hw.length - 1, hw.trimEnd() ],  // Shorter, should trim
+            [ hw, hw.length - 2, hw.trimEnd() ],  // ^
+            [ 'What a feelin', 6, 'What a' ],
+            [ 'big          spaces', 8, 'big' ],
+            [ ex1, 8, 'some big' ],
+            [ ex1, 10, 'some big' ],
+            [ ex1, 12, 'some big' ],
+            [ ex1, 13, 'some big fancy' ],
+        ])('Splitting "%s" with len %d results in "%s"',
+            (str: string, len: number, expected: string) => {
+
+                expect(cutAtWord(str, len)).toBe(expected)
+            })
+
     })
 
 })
@@ -159,8 +172,7 @@ describe('parseTableData()', () => {
 
         it('First embed should have a title', () => {
             const { title } = actual[0]
-            expect(title).toBe('string')
-            expect(title?.length).toBe('2021-01-27')
+            expect(title).toBe('2021-01-27')
         })
 
         it('Every other embed should not have a title', () => {

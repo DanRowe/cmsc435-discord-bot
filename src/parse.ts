@@ -39,7 +39,7 @@ export const cutAtWord = (str: string, len: number = maxDescLen): string => {
 
         // Trim location starts at a word boundary, no more to do
         if (pred === '' || isWhitespace(pred)) {
-            return str.substr(0, len)
+            return str.substr(0, len + 1)
         }
 
         while (isSymbol(str.charAt(index))) {

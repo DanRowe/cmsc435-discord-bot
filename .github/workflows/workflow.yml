@@ -1,4 +1,4 @@
-name: Build and Lint
+name: Node CI
 
 # Run this workflow every time a new commit pushed to your repository
 on: push
@@ -33,9 +33,34 @@ jobs:
         run: yarn build
 
       # Make the build code downloadable
-      - name: Upload Artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: cmsc435-discord-bot
           path: dist/**
+          retention-days: 1
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      # Install dependencies
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      # Lint source code
+      - name: Test
+        run: yarn test
+
+      - name: Upload Coverage Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-coverage
+          path: path/**
           retention-days: 1
