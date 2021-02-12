@@ -5,9 +5,7 @@
 Notifies you when Dr. Purtilo makes a new [blog post](https://seam.cs.umd.edu/purtilo/435/blog.html) by sending a message to a discord text channel.
 
 <p align="center">
-
-![Example Message](doc/bot-example-msg.png)
-
+  <img align="center" src="doc/bot-example-msg.png">
 </p>
 
 ## Setup
