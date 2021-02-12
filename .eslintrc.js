@@ -27,6 +27,7 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "error",
         "@typescript-eslint/prefer-regexp-exec": "off",
         "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unsafe-member-access": "warn",
         "@typescript-eslint/no-empty-interface": "warn",
         "array-bracket-spacing": ["error", "always", {
