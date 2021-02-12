@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Bluebird from 'bluebird'
 import { JSDOM } from 'jsdom'
-import { promises as fs } from 'fs'
+import { Stats, promises as fs } from 'fs'
 
 import config from './config'
 import { parseTableData } from './parse'
@@ -10,19 +10,19 @@ import { ExecuteWebhookBody } from './types/interface'
 global.Promise = Bluebird.Promise
 
 const { blogUrl, webhookUrl, blogFile } = config
-// const blogUrl = 'https://seam.cs.umd.edu/purtilo/435/blog.html'
-// const webhookUrl = process.env.WEBHOOK_URL || ''
-
-// const blogs = fs.readFileSync(blogFile, 'utf8').split('\n')
-
 const loadBlogFile = async (): Promise<string[]> => {
+    let s: Stats
     try {
-        const s = await fs.stat(blogFile)
-        // if (s.isDirectory()) throw new Error('Blog file is a directory')
-        return (await fs.readFile(blogFile, 'utf8')).split('\n')
+        s = await fs.stat(blogFile)
     } catch (e) {
         return []
     }
+
+    if (s.isDirectory()) {
+        throw new Error(`Bad blog file: ${blogFile} is a directory`)
+    }
+
+    return (await fs.readFile(blogFile, 'utf8')).split('\n')
 }
 
 const blogs = loadBlogFile()
