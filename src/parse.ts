@@ -82,10 +82,9 @@ export const parseTableData = (td: HTMLTableCellElement): ExecuteWebhookBody => 
 
     const { children } = td
     const markdown = turndownService.turndown(td)
-    // Extract data and shit
-    const [ firstParagraph ] = Array.from(children)
+    const [ idATag, firstParagraph ] = Array.from(children)
     // [ strong tag with date string, a tag with id ]
-    const [ date, idATag ] = Array.from(firstParagraph.children)
+    const [ date ] = Array.from(firstParagraph.children)
     const { id } = idATag
     const now = new Date()
     const postTime = new Date(date.innerHTML)
