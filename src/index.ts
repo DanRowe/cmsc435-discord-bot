@@ -55,8 +55,8 @@ const getTableElements = async (url = blogUrl): Promise<HTMLTableCellElement[]> 
 const getNewPosts = async (posts: HTMLTableCellElement[]): Promise<HTMLTableCellElement[]> => {
     const b = await blogs
     return posts.filter(e => {
-        const date = e.children[0].children[0].innerHTML
-        const id = e.children[0].children[1].id
+        const date = e.children[1].children[0].innerHTML
+        const id = e.children[0].id
 
         const isToday = date.localeCompare(todaysDate) === 0
         const isNew = !b.includes(id)
@@ -68,7 +68,7 @@ const getNewPosts = async (posts: HTMLTableCellElement[]): Promise<HTMLTableCell
 const updateBlogFile = (posts: HTMLTableCellElement[]) => Promise.all(
     posts.map(e => fs.appendFile(
         blogFile,
-        `${e.children[0].children[1].id}\n`
+        `${e.children[0].id}\n`
     )))
 
 const sendDiscordNotifications = async (data: ExecuteWebhookBody[]) => {
