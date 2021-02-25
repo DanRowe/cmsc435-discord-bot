@@ -44,7 +44,7 @@ MAILTO=root@example.com
 # Make sure node and yarn are available on the path. Adjust as necessary
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-*/15 * * * * (cd /path/to/your/cmsc435-discord-bot;
+*/15 * * * * (cd /path/to/your/cmsc435-discord-bot; yarn start) 2>&1 | logger -t DiscordBot
 ```
 
-This makes the bot run every 15 minutes. For more info on how to configure this, see this [helpful article](https://opensource.com/article/17/11/how-use-cron-linux) or use `man crontab`.
+This makes the bot run every 15 minutes. For more info on how to configure this, see this [helpful article](https://opensource.com/article/17/11/how-use-cron-linux) or use `man crontab`. To view bot logs, run `grep DiscordBot /var/log/syslog`.
