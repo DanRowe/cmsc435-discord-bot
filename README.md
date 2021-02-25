@@ -48,3 +48,15 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 ```
 
 This makes the bot run every 15 minutes. For more info on how to configure this, see this [helpful article](https://opensource.com/article/17/11/how-use-cron-linux) or use `man crontab`. To view bot logs, run `grep DiscordBot /var/log/syslog`.
+
+### Git Hook
+
+Optionally, you can automatically rebuild the bot when pulling from the git repository by creating a [post-merge hook](https://git-scm.com/docs/githooks#_post_merge).
+
+#### **`.git/hooks/post-merge`**
+```sh
+#!/usr/bin/env bash
+yarn build
+```
+
+Then make it executable by running `chmod +x post-merge`.
