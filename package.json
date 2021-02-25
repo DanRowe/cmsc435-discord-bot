@@ -10,7 +10,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node --enable-source-maps dist/index.js",
     "build": "tsc",
     "watch": "yarn build --watch",
     "lint": "eslint src/",
